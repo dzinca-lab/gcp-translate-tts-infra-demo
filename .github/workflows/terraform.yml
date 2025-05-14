@@ -3,50 +3,27 @@ name: Terraform Deploy via WIF
 on:
   push:
     branches: [main]
-
 permissions:
-  id-token: write      # Required for OIDC
+  id-token: write
   contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    env:
-      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      PROJECT_NUMBER: ${{ secrets.GCP_PROJECT_NUMBER }}
-      POOL_ID: "gh-pool"
-      PROVIDER_ID: "gh-provider"
-      SERVICE_ACCOUNT_EMAIL: "terraform-deployer@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
-      OIDC_TOKEN_FILE: "/tmp/github-token"
-
     steps:
-    - name: Checkout source
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Install gcloud CLI
-      uses: google-github-actions/setup-gcloud@v2
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "projects/<PROJECT_NUMBER>/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+          service_account: "github-deployer@<PROJECT_ID>.iam.gserviceaccount.com"
 
-    - name: Get OIDC token and write to file
-      id: get_token
-      run: |
-        curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-             "$ACTIONS_ID_TOKEN_REQUEST_URL" > $OIDC_TOKEN_FILE
+      - name: Run gcloud command
+        run: |
+          gcloud auth list
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
 
-    - name: Generate WIF credentials file
-      run: |
-        gcloud iam workload-identity-pools create-cred-config \
-          "projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$POOL_ID/providers/$PROVIDER_ID" \
-          --service-account="$SERVICE_ACCOUNT_EMAIL" \
-          --output-file="wif-credentials.json" \
-          --credential-source-file="$OIDC_TOKEN_FILE"
 
-        echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/wif-credentials.json" >> $GITHUB_ENV
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Plan
-      run: terraform plan
