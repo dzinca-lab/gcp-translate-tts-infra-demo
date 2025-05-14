@@ -31,21 +31,21 @@ jobs:
 
       - name: Ensure GCS bucket exists for Terraform state
         run: |
-          if ! gsutil ls -b gs://$STATE_BUCKET > /dev/null 2>&1; then
-            echo "Creating GCS bucket: $STATE_BUCKET"
-            gcloud storage buckets create $STATE_BUCKET \
+          if ! gsutil ls -b gs://${STATE_BUCKET} > /dev/null 2>&1; then
+            echo "Creating GCS bucket: ${STATE_BUCKET}"
+            gcloud storage buckets create ${STATE_BUCKET} \
               --project=${{ secrets.GCP_PROJECT_ID}} \
-              --location=$STATE_BUCKET_REGION \
+              --location=${STATE_BUCKET_REGION} \
               --uniform-bucket-level-access
               --enble-object-versioning=true \
           else
-            echo "GCS bucket already exists: $STATE_BUCKET"
+            echo "GCS bucket already exists: ${STATE_BUCKET}"
           fi
 
       - name: Configure backend with dynamic values
         run: |
           cat <<EOF > backend.hcl
-          bucket  = "$STATE_BUCKET"
+          bucket  = "${STATE_BUCKET}"
           prefix  = "envs/${{ github.environment }}/terraform.tfstate"
           EOF
 
