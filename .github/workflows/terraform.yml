@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         env:
          STATE_BUCKET: ${{ format('${{ secrets.GCP_PROJECT_ID}}', github.environment) }}
+         STATE_BUCKET_REGION: "us-central1"
       
   
       - name: Authenticate to Google Cloud
@@ -34,7 +35,7 @@ jobs:
             echo "Creating GCS bucket: $STATE_BUCKET"
             gcloud storage buckets create $STATE_BUCKET \
               --project=${{ secrets.GCP_PROJECT_ID}} \
-              --location=$REGION \
+              --location=$STATE_BUCKET_REGION \
               --uniform-bucket-level-access
               --enble-object-versioning=true \
           else
