@@ -12,14 +12,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: PROD
+    env:
+      STATE_BUCKET: ${{ 'state-', github.environment) }}
+      STATE_BUCKET_REGION: "us-central1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        env:
-         STATE_BUCKET: ${{ format('${{ secrets.GCP_PROJECT_ID}}', github.environment) }}
-         STATE_BUCKET_REGION: "us-central1"
       
-  
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -31,13 +31,13 @@ jobs:
 
       - name: Ensure GCS bucket exists for Terraform state
         run: |
-          if ! gsutil ls -b gs://${{ env.STATE_BUCKET }} > /dev/null 2>&1; then
-            echo "Creating GCS bucket: ${{ env.STATE_BUCKET }}"
-            gcloud storage buckets create ${{ env.STATE_BUCKET }} \
+          if ! gsutil ls -b gs://$STATE_BUCKET > /dev/null 2>&1; then
+            echo "Creating GCS bucket: $STATE_BUCKET"
+            gcloud storage buckets create $STATE_BUCKET \
               --project=${{ secrets.GCP_PROJECT_ID }} \
-              --location=${{ env.STATE_BUCKET_REGION }}\
+              --location=$STATE_BUCKET_REGION\
           else
-            echo "GCS bucket already exists: ${STATE_BUCKET}"
+            echo "GCS bucket already exists: $STATE_BUCKET"
           fi
 
       - name: Configure backend with dynamic values
