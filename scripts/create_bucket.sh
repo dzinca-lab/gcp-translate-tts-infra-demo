@@ -16,7 +16,7 @@ echo "Checking if GCS bucket exists: gs://${STATE_BUCKET}"
 
 if ! gsutil ls -b "gs://${STATE_BUCKET}" > /dev/null 2>&1; then
   echo "Creating GCS bucket: ${STATE_BUCKET}"
-  gcloud storage buckets create "${STATE_BUCKET}" \
+  gcloud storage buckets create "gs://${PROJECT_ID}-${STATE_BUCKET}" \
     --project="${PROJECT_ID}" \
     --location="${REGION}" \
     --uniform-bucket-level-access
