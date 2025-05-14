@@ -30,15 +30,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Ensure GCS bucket exists for Terraform state
-        run: |
-          if ! gsutil ls -b gs://$STATE_BUCKET > /dev/null 2>&1; then
-            echo "Creating GCS bucket: $STATE_BUCKET"
-            gcloud storage buckets create $STATE_BUCKET \
-              --project=${{ secrets.GCP_PROJECT_ID }} \
-              --location=$STATE_BUCKET_REGION\
-          else
-            echo "GCS bucket already exists: $STATE_BUCKET"
-          fi
+        run: ./scripts/create_bucket.sh
 
       - name: Configure backend with dynamic values
         run: |
