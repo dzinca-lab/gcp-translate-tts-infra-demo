@@ -1,6 +1,7 @@
 name: Terraform Deploy via WIF
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 permissions:
