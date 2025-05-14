@@ -15,7 +15,7 @@ jobs:
     env:
       STATE_BUCKET: ${{ format('state-', github.environment) }}
       STATE_BUCKET_REGION: "us-central1"
-      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
+          workload_identity_provider: "projects/${{ vars.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
           service_account: ${{ secrets.SERVICE_ACCOUNT_NAME }}
 
       - name: Install gcloud CLI
@@ -46,6 +46,6 @@ jobs:
       - name: Run gcloud command
         run: |
           gcloud auth list
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          gcloud config set project ${{ vars.GCP_PROJECT_ID }}
 
 
