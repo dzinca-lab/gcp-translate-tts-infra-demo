@@ -36,7 +36,6 @@ jobs:
             gcloud storage buckets create ${{ env.STATE_BUCKET }} \
               --project=${{ secrets.GCP_PROJECT_ID }} \
               --location=${{ env.STATE_BUCKET_REGION }}\
-              --enble-object-versioning=true \
           else
             echo "GCS bucket already exists: ${STATE_BUCKET}"
           fi
