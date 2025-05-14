@@ -30,7 +30,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Ensure GCS bucket exists for Terraform state
-        run: ./scripts/create_bucket.sh
+        run: |
+         chmod +x ./scripts/create_bucket.sh
+         ./scripts/create_bucket.sh
 
       - name: Configure backend with dynamic values
         run: |
