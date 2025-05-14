@@ -13,9 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: PROD
     env:
-      STATE_BUCKET: ${{ format('state-', github.environment) }}
+      STATE_BUCKET: ${{ format('state-%s', github.environment) }}
       STATE_BUCKET_REGION: "us-central1"
-      PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
