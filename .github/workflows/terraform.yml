@@ -15,18 +15,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        env:
+         STATE_BUCKET: ${{ format('${{ secrets.GCP_PROJECT_ID}}', github.environment) }}
       
-
-
+  
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
           service_account: ${{ secrets.SERVICE_ACCOUNT_NAME }}
 
-      - name: Print GitHub OIDC token claims
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Ensure GCS bucket exists for Terraform state
         run: |
-          curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq .
+          if ! gsutil ls -b gs://$STATE_BUCKET > /dev/null 2>&1; then
+            echo "Creating GCS bucket: $STATE_BUCKET"
+            gcloud storage buckets create $STATE_BUCKET \
+              --project=${{ secrets.GCP_PROJECT_ID}} \
+              --location=$REGION \
+              --uniform-bucket-level-access
+              --enble-object-versioning=true \
+          else
+            echo "GCS bucket already exists: $STATE_BUCKET"
+          fi
+
+      - name: Configure backend with dynamic values
+        run: |
+          cat <<EOF > backend.hcl
+          bucket  = "$STATE_BUCKET"
+          prefix  = "envs/${{ github.environment }}/terraform.tfstate"
+          EOF
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+
+      - name: Initialize Terraform
+        run: terraform init -backend-config=backend.hcl
+
 
       - name: Run gcloud command
         run: |
