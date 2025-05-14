@@ -31,12 +31,11 @@ jobs:
 
       - name: Ensure GCS bucket exists for Terraform state
         run: |
-          if ! gsutil ls -b gs://${STATE_BUCKET} > /dev/null 2>&1; then
-            echo "Creating GCS bucket: ${STATE_BUCKET}"
-            gcloud storage buckets create ${STATE_BUCKET} \
+          if ! gsutil ls -b gs://${{ env.STATE_BUCKET }} > /dev/null 2>&1; then
+            echo "Creating GCS bucket: ${{ env.STATE_BUCKET }}"
+            gcloud storage buckets create ${{ env.STATE_BUCKET }} \
               --project=${{ secrets.GCP_PROJECT_ID}} \
-              --location=${STATE_BUCKET_REGION} \
-              --uniform-bucket-level-access
+              --location=${{env.STATE_BUCKET_REGION} \
               --enble-object-versioning=true \
           else
             echo "GCS bucket already exists: ${STATE_BUCKET}"
