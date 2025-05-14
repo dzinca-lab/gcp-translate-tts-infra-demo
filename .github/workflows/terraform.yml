@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: PROD
     env:
-      STATE_BUCKET: ${{ format('state-%s', github.environment) }}
+      STATE_BUCKET: ${{ format('state-%s', ${{ github.environment }} ) }}
       STATE_BUCKET_REGION: "us-central1"
     steps:
       - name: Checkout
