@@ -15,6 +15,7 @@ jobs:
     env:
       STATE_BUCKET: ${{ format('state-', github.environment) }}
       STATE_BUCKET_REGION: "us-central1"
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
