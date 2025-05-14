@@ -16,15 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Print GitHub OIDC token claims
-        run: |
-          curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq .
+
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
           service_account: ${{ secrets.SERVICE_ACCOUNT_NAME }}
+
+      - name: Print GitHub OIDC token claims
+        run: |
+          curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL" | jq .
 
       - name: Run gcloud command
         run: |
