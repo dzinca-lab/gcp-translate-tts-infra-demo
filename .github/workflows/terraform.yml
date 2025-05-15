@@ -11,9 +11,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: PROD
+    environment: production
     env:
-      STATE_BUCKET: tf-state-PROD
+      STATE_BUCKET: tf-state-production
       STATE_BUCKET_REGION: "us-central1"
     steps:
       - name: Checkout
