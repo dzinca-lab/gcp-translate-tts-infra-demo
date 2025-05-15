@@ -11,7 +11,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: PROD
     env:
       STATE_BUCKET: tf-state-PROD
       STATE_BUCKET_REGION: "us-central1"
