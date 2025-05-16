@@ -14,7 +14,6 @@ variable "function_translate_name" {
 
 variable "cloud_function_translate_archive" {
   type = string
-  default = "cloud_function_translate_source.zip"
   
 }
 

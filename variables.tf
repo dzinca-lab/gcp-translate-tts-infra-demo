@@ -26,3 +26,11 @@ variable "target_language" {
   type = string
   default = "fr"
 }
+
+
+
+variable "cloud_function_translate_archive" {
+  type = string
+  description = "The name of the archive file for the Cloud Function"
+  
+}

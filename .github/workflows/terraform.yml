@@ -38,7 +38,7 @@ jobs:
       - name: Zip function code
         working-directory: ./apps/translation 
         run: |
-          zip -r cloud_function_translate_source.zip .
+          zip -r cloud_function_translate_source_${{ github.sha }}.zip .
     
 
       - name: Authenticate to Google Cloud
@@ -58,7 +58,7 @@ jobs:
 
       - name: Upload Artifacts to GCS
         run: |
-            gsutil cp ./apps/translation/cloud_function_translate_source.zip gs://${{ vars.GCP_PROJECT_ID }}-$CODE_BUCKET
+            gsutil cp ./apps/translation/cloud_function_translate_source_${{ github.sha }}.zip gs://${{ vars.GCP_PROJECT_ID }}-$CODE_BUCKET
 
   plan:
     runs-on: ubuntu-latest
@@ -158,4 +158,4 @@ jobs:
         env:   
           TARGET_LANGUAGE: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_CODE_BUCKET_NAME: "ttts-code-${{ vars.GCP_PROJECT_ID }}"
-
+          TF_VAR_CLOUD_FUNCTION_TRANSLATE_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
