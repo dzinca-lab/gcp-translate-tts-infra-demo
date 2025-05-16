@@ -16,7 +16,7 @@ echo "Checking if GCS bucket exists: gs://${PROJECT_ID}-${STATE_BUCKET}"
 
 if ! gsutil ls -b "gs://${PROJECT_ID}-${STATE_BUCKET}" > /dev/null 2>&1; then
   echo "Creating GCS bucket: ${PROJECT_ID}-${STATE_BUCKET}"
-  gcloud storage buckets create "gs://terraform/state/${PROJECT_ID}-${STATE_BUCKET}" \
+  gcloud storage buckets create "gs://${PROJECT_ID}-${STATE_BUCKET}" \
     --project="${PROJECT_ID}" \
     --location="${REGION}" \
     --uniform-bucket-level-access
