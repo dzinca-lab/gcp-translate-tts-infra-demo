@@ -12,6 +12,7 @@ jobs:
   build:
     name: Build Functions
     runs-on: ubuntu-latest
+    environment: PROD
     env:
       CODE_BUCKET: ttts-code
       CODE_BUCKET_REGION: "us-central1"
