@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  plan:
     runs-on: ubuntu-latest
     environment: PROD
     env:
@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -31,26 +31,23 @@ jobs:
 
       - name: Ensure GCS bucket exists for Terraform state
         run: |
-         chmod +x ./scripts/create_bucket.sh
-         ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $STATE_BUCKET $STATE_BUCKET_REGION 
+          chmod +x ./scripts/create_bucket.sh
+          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $STATE_BUCKET $STATE_BUCKET_REGION 
 
       - name: Generate backend config
         run: |
-         cat > backend.hcl <<EOF
-         bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
-         prefix = "terraform/"
-         EOF
+          cat > backend.hcl <<EOF
+          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
+          prefix = "terraform/"
+          EOF
         env:
           ENV_NAME: "production"
-
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
-
       - name: Initialize Terraform
         run: terraform init -backend-config=backend.hcl
-
 
       - name: Run Terraform Plan
         run: terraform plan -out=tfplan -input=false
@@ -59,9 +56,31 @@ jobs:
           TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
 
+  apply:
+    runs-on: ubuntu-latest
+    needs: plan
+    environment: PROD
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
+          service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
+
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Initialize Terraform
+        run: terraform init -backend-config=backend.hcl
+
       - name: Run Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
-        continue-on-error: false
         env:
           TF_LOG: "DEBUG"
-
