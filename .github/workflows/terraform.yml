@@ -60,6 +60,7 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     environment: PROD
+    needs: build
     env:
       STATE_BUCKET: tf-state-production
       STATE_BUCKET_REGION: "us-central1"
