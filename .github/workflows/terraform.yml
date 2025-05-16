@@ -98,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: translation-function
-          path: ./apps/translation 
+          path: ./apps/translation/cloud_function_translate_source.zip
 
 
   apply:
