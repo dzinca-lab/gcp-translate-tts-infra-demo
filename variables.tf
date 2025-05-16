@@ -18,7 +18,6 @@ variable "gcp_zone" {
 
 variable "function_translate_name" {
   type = string
-  default = "translate-file-http"
 }
 
 variable "code_bucket_name" {

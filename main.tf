@@ -23,9 +23,9 @@ module "cloud_function" {
   project_id = var.project_id
   gcp_region = var.gcp_region
   function_translate_name = var.function_translate_name
-  code_bucket_name = module.in-bucket.bucket_name
-  source_bucket_name = module.in-bucket.bucket_name
-  target_bucket_name = module.out-bucket.bucket_name
+  code_bucket_name =  "ttts-code-${var.project_id}"
+  source_bucket_name = "in-bucket-${var.project_id}"
+  target_bucket_name = "out-bucket-${var.project_id}"
   target_language = var.target_language
   depends_on = [module.in-bucket, module.out-bucket]
   
