@@ -38,7 +38,7 @@ jobs:
       - name: Generate backend config
         run: |
          cat > backend.hcl <<EOF
-         bucket = "${PROJECT_ID}-${STATE_BUCKET}"
+         bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
          prefix = "terraform/state/"
          EOF
 
