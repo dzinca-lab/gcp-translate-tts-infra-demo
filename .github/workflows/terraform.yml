@@ -147,12 +147,6 @@ jobs:
           name: terraform-config
           path: .
 
-      - name: Download Functions Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: translation-function
-          path: .
-
       - name: Initialize Terraform
         run: terraform init -backend-config=backend.hcl
 
@@ -160,4 +154,4 @@ jobs:
         run: terraform apply -input=false -auto-approve tfplan
         env:
           TARGET_LANGUAGE: "fr"
-          
+
