@@ -40,7 +40,6 @@ jobs:
 
 
       - name: Initialize Terraform
-        working-directory: ./
         run: terraform init -backend-config=backend.hcl
 
 
