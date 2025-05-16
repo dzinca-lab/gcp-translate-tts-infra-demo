@@ -18,26 +18,15 @@ module "out-bucket" {
 }
 
 
-module "cloud_function_translation" {
-  source = "hashicorp/google"
-  version = ">= 4.0.0"
-  project = var.project_id
-  region  = var.gcp_region
-  function_name = "translate-file-function"
-  runtime       = "python39"
-  entry_point   = "translate_file_on_upload"
-  source_archive_bucket = "cloud_function_translate_source.zip"
-  source_archive_object = "cloud_function_source.zip"
-  environment_variables = {
-    SOURCE_BUCKET_NAME ="in-bucket-${var.project_id}"
-    TARGET_BUCKET_NAME = "out-bucket-${var.project_id}"
-    TARGET_LANGUAGE   = "fr"
-  }
-  trigger_http = false
-  event_trigger = {
-    trigger_event = "google.storage.object.finalize"
-    trigger_resource = "projects/${var.project_id}/buckets/in-bucket-${var.project_id}"
-  }
-  memory_size = 256
-  timeout = 120
+module "cloud_function" {
+  source = "./modules/cloud_function"
+  project_id = var.project_id
+  gcp_region = var.gcp_region
+  function_translate_name = var.function_translate_name
+  code_bucket_name = module.in-bucket.bucket_name
+  source_bucket_name = module.in-bucket.bucket_name
+  target_bucket_name = module.out-bucket.bucket_name
+  target_language = var.target_language
+  depends_on = [module.in-bucket, module.out-bucket]
+  
 }

@@ -24,10 +24,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9' # Or your function's Python version
+          python-version: '3.9' 
 
       - name: Install dependencies
-        working-directory: ./apps/translation # Adjust to your function's directory
+        working-directory: ./apps/translation
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
@@ -48,7 +48,7 @@ jobs:
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Ensure GCS bucket exists for Terraform state
+      - name: Ensure GCS bucket exists for function code
         run: |
           chmod +x ./scripts/create_bucket.sh
           ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $CODE_BUCKET $CODE_BUCKET_REGION 
@@ -156,4 +156,18 @@ jobs:
       - name: Run Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
         env:
-          TF_LOG: "DEBUG"
+          ENV_NAME: "production"
+          TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
+          TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
+          TF_VAR_code_bucket: ${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}
+          TF_VAR_code_bucket_region: ${{ env.CODE_BUCKET_REGION }}
+          TF_VAR_state_bucket: ${{ vars.GCP_PROJECT_ID }}-${{ env.STATE_BUCKET }}
+          TF_VAR_state_bucket_region: ${{ env.STATE_BUCKET_REGION }}
+          TF_VAR_function_name: ${{ vars.FUNCTION_NAME }}
+          TF_VAR_function_region: ${{ vars.GCP_REGION }}
+          TF_VAR_function_source: gs://${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}/cloud_function_translate_source.zip
+          TF_VAR_function_entry_point: ${{ vars.FUNCTION_ENTRY_POINT }}
+          TF_VAR_function_runtime: ${{ vars.FUNCTION_RUNTIME }}
+          TF_VAR_function_timeout: ${{ vars.FUNCTION_TIMEOUT }}
+          TF_VAR_function_memory: ${{ vars.FUNCTION_MEMORY }}
+          TF_VAR_function_trigger_http: ${{ vars.FUNCTION_TRIGGER_HTTP }}
