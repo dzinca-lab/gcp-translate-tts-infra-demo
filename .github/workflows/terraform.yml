@@ -160,3 +160,4 @@ jobs:
         run: terraform apply -input=false -auto-approve tfplan
         env:
           TARGET_LANGUAGE: "fr"
+          
