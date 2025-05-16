@@ -38,7 +38,7 @@ jobs:
         run: |
          cat > backend.hcl <<EOF
          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
-         prefix = "terraform/state/$ENV_NAME.tfstate"
+         prefix = "terraform/state/$ENV_NAME"
          EOF
         env:
           ENV_NAME: "production"
