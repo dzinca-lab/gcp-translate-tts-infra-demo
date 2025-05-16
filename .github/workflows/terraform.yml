@@ -90,6 +90,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Zip function code
+        working-directory: ./apps/translation 
         run: |
           zip -r cloud_function_translate_source.zip .
       
@@ -97,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: translation-function
-          path: output/
+          path: ./apps/translation 
 
 
   apply:
