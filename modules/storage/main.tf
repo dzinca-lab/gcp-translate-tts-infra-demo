@@ -1,4 +1,4 @@
-resource "google_storage_bucket" "default" {
+resource "google_storage_bucket" "tt_bucket" {
   name     = var.bucket_name
   location = var.location
   project  = var.project_id
@@ -20,3 +20,6 @@ resource "google_storage_bucket" "default" {
     }
   }
 }
+
+
+
