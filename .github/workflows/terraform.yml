@@ -61,4 +61,7 @@ jobs:
 
       - name: Run Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
+        continue-on-error: false
+        env:
+          TF_LOG: "DEBUG"
 
