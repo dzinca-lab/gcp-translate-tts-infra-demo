@@ -61,7 +61,7 @@ def translate_file_on_upload(event, context):
 
                 # Create the target blob name (e.g., translated_en_document.txt)
                 base_name, ext = os.path.splitext(file_name)
-                translated_file_name = f"{base_name}_translated_{TARGET_LANGUAGE}_{uuid.uuid4().hex}_{ext}"
+                translated_file_name = f"{base_name}_translated_{TARGET_LANGUAGE}_{uuid.uuid4().hex}{ext}"
                 target_blob = target_bucket.blob(translated_file_name)
 
                 # Upload the translated text to the target bucket
