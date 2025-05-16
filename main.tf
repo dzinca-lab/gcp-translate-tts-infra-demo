@@ -18,7 +18,7 @@ module "out-bucket" {
 }
 
 
-module "cloud_function" {
+module "translate_function" {
   source = "./modules/cloud_function"
   project_id = var.project_id
   gcp_region = var.gcp_region
