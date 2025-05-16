@@ -12,8 +12,9 @@ jobs:
   build:
     name: Build Functions
     runs-on: ubuntu-latest
-    environment: 
-      name: production # Or your target environment
+    env:
+      CODE_BUCKET: ttts-code
+      CODE_BUCKET_REGION: "us-central1"
 
     steps:
       - name: Checkout code
@@ -34,12 +35,26 @@ jobs:
         working-directory: ./apps/translation 
         run: |
           zip -r cloud_function_translate_source.zip .
-      
-      - name: Upload Translation Function Artifact
-        uses: actions/upload-artifact@v4
+    
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          name: translation-function
-          path: ./apps/translation/cloud_function_translate_source.zip
+          token_format: "access_token"
+          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
+          service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
+
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Ensure GCS bucket exists for Terraform state
+        run: |
+          chmod +x ./scripts/create_bucket.sh
+          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $CODE_BUCKET $CODE_BUCKET_REGION 
+
+      - name: Upload Artifacts to GCS
+        run: |
+            gsutil cp ./apps/translation/cloud_function_translate_source.zip gs://your-gcs-bucket-name/path/in/bucket/
 
   plan:
     runs-on: ubuntu-latest
