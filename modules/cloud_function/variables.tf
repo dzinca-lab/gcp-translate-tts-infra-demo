@@ -12,6 +12,12 @@ variable "function_translate_name" {
   default = "translate-file-http"
 }
 
+variable "cloud_function_translate_archive" {
+  type = string
+  default = "cloud_function_translate_source.zip"
+  
+}
+
 variable "code_bucket_name" {
   type = string
 }

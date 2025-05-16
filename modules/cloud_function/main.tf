@@ -6,8 +6,8 @@ resource "google_cloudfunctions_function" "translate_function" {
   project     = var.project_id
   region      = var.gcp_region
   available_memory_mb = 256
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.archive.name
+  source_archive_bucket = var.code_bucket_name
+  source_archive_object = var.cloud_function_translate_archive
     event_trigger {
     event_type = "google.storage.object.finalize"
     resource   = var.source_bucket_name
