@@ -114,7 +114,7 @@ jobs:
           TF_VAR_SOURCE_BUCKET_NAME: "in-bucket-${{ vars.GCP_PROJECT_ID }}"
           TF_VAR_TARGET_BUCKET_NAME: "out-bucket-${{ vars.GCP_PROJECT_ID }}"
           TF_VAR_CODE_BUCKET_NAME: "ttts-code-${{ vars.GCP_PROJECT_ID }}"
-          TARGET_LANGUAGE: "${{ vars.TARGET_LANGUAGE }}"
+          TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
 
       - name: Copy Artifacts
         run: |
@@ -161,5 +161,5 @@ jobs:
       - name: Run Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
         env:   
-          TARGET_LANGUAGE: "${{ vars.TARGET_LANGUAGE }}"
+          TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}

@@ -24,7 +24,6 @@ variable "function_translate_name" {
 
 variable "target_language" {
   type = string
-  default = "fr"
 }
 
 

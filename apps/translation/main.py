@@ -7,7 +7,7 @@ from google.cloud import translate_v2 as translate
 # Environment variables (set in Cloud Function configuration)
 SOURCE_BUCKET_NAME = os.environ.get("SOURCE_BUCKET_NAME")
 TARGET_BUCKET_NAME = os.environ.get("TARGET_BUCKET_NAME")
-TARGET_LANGUAGE = os.environ.get("TARGET_LANGUAGE", "fr")  # Default to French
+TARGET_LANGUAGE = os.environ.get("TARGET_LANGUAGE")  # Default to French
 
 def translate_file_on_upload(event, context):
     """
