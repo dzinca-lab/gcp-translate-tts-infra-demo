@@ -29,8 +29,11 @@ jobs:
       - name: Install dependencies
         working-directory: ./apps/translation
         run: |
+          python -m venv venv
+          source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
+          deactivate
 
       - name: Zip function code
         working-directory: ./apps/translation 
@@ -154,5 +157,5 @@ jobs:
         run: terraform apply -input=false -auto-approve tfplan
         env:
           TARGET_LANGUAGE: "fr"
-          TF_VAR_CODE_BUCKET_NAME: "ttts-code-${{ vars.GCP_PROJECT_ID }}"
+          TF_VAR_C
 
