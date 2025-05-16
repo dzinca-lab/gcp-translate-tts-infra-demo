@@ -108,7 +108,7 @@ jobs:
       - name: Run Terraform Plan
         run: terraform plan -out=tfplan -input=false
         env:
-          TF_VAR_cloud_function_translate_archive: ${{ TRANSLATE_FUNCTION_ARCHIVE }}
+          TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
           TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
           TF_VAR_SOURCE_BUCKET_NAME: "in-bucket-${{ vars.GCP_PROJECT_ID }}"
@@ -161,4 +161,4 @@ jobs:
         run: terraform apply -input=false -auto-approve tfplan
         env:   
           TARGET_LANGUAGE: "${{ vars.TARGET_LANGUAGE }}"
-          TF_VAR_cloud_function_translate_archive: $TRANSLATE_FUNCTION_ARCHIVE
+          TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
