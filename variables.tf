@@ -18,7 +18,7 @@ variable "gcp_zone" {
 
 variable "function_translate_name" {
   type = string
-  default = "TranslateFileOnUpload"
+  default = "translate-function"
   description = "Name of the Cloud Function for file translation"
 }
 

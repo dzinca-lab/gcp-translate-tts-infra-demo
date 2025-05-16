@@ -9,7 +9,7 @@ variable "gcp_region" {
 
 variable "function_translate_name" {
   type = string
-  default = "translate-file-http"
+
 }
 
 variable "cloud_function_translate_archive" {
