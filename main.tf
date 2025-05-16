@@ -22,21 +22,21 @@ module "cloud_function_translation" {
   source = "hashicorp/google"
   version = ">= 4.0.0"
   project = var.project_id
-  region  = "<YOUR_REGION>"
+  region  = var.gcp_region
   function_name = "translate-file-function"
   runtime       = "python39"
   entry_point   = "translate_file_on_upload"
-  source_archive_bucket = "<YOUR_SOURCE_CODE_BUCKET>"
+  source_archive_bucket = "cloud_function_translate_source.zip"
   source_archive_object = "cloud_function_source.zip"
   environment_variables = {
-    SOURCE_BUCKET_NAME = "<YOUR_SOURCE_BUCKET_NAME>"
-    TARGET_BUCKET_NAME = "<YOUR_TARGET_BUCKET_NAME>"
+    SOURCE_BUCKET_NAME ="in-bucket-${var.project_id}"
+    TARGET_BUCKET_NAME = "out-bucket-${var.project_id}"
     TARGET_LANGUAGE   = "fr"
   }
   trigger_http = false
   event_trigger = {
     trigger_event = "google.storage.object.finalize"
-    trigger_resource = "projects/<YOUR_PROJECT_ID>/buckets/<YOUR_SOURCE_BUCKET_NAME>"
+    trigger_resource = "projects/${var.project_id}/buckets/in-bucket-${var.project_id}"
   }
   memory_size = 256
   timeout = 120
