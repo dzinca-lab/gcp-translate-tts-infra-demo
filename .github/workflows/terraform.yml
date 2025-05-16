@@ -59,9 +59,6 @@ jobs:
           TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
           TF_VAR_location: ${{ vars.GCP_REGION }}
 
-      - name: Show Terraform Plan
-        run: terraform show -json tfplan | jq -r '.resource_changes[] | select(.change.actions[0] == "create") | .address'
-        id: plan
-        continue-on-error: true
-
+      - name: Run Terraform Apply
+        run: terraform apply -input=false -auto-approve tfplan
 
