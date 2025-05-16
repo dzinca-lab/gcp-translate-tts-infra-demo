@@ -68,6 +68,38 @@ jobs:
           name: terraform-config
           path: output/
 
+  Build:
+    name: Build Functions
+    runs-on: ubuntu-latest
+    environment: 
+      name: production # Or your target environment
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9' # Or your function's Python version
+
+      - name: Install dependencies
+        working-directory: ./apps/translation # Adjust to your function's directory
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Zip function code
+        run: |
+          zip -r cloud_function_translate_source.zip .
+      
+      - name: Upload Translation Function Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: translation-function
+          path: output/
+
+
   apply:
     runs-on: ubuntu-latest
     needs: plan
