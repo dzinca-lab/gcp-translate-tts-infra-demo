@@ -18,18 +18,8 @@ variable "gcp_zone" {
 
 variable "function_translate_name" {
   type = string
-}
-
-variable "code_bucket_name" {
-  type = string
-}
-
-variable "source_bucket_name" {
-  type = string
-}
-
-variable "target_bucket_name" {
-  type = string
+  default = "TranslateFileOnUpload"
+  description = "Name of the Cloud Function for file translation"
 }
 
 variable "target_language" {
