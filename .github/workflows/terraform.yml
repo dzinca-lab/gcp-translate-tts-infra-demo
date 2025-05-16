@@ -157,5 +157,4 @@ jobs:
         run: terraform apply -input=false -auto-approve tfplan
         env:   
           TARGET_LANGUAGE: "${{ vars.TARGET_LANGUAGE }}"
-          TF_VAR_CODE_BUCKET_NAME: "ttts-code-${{ vars.GCP_PROJECT_ID }}"
-          TF_VAR_CLOUD_FUNCTION_TRANSLATE_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
+          TF_VAR_cloud_function_translate_archive: "cloud_function_translate_source_${{ github.sha }}.zip"
