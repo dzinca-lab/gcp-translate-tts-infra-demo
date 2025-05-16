@@ -39,7 +39,7 @@ jobs:
         run: |
          cat > backend.hcl <<EOF
          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
-         prefix = "terraform/state/"
+         prefix = "terraform/state/${{ github.environment }}.tfstate"
          EOF
 
       - name: Set up Terraform
