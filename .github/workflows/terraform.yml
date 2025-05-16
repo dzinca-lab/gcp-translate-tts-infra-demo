@@ -35,6 +35,13 @@ jobs:
          chmod +x ./scripts/create_bucket.sh
          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $STATE_BUCKET $STATE_BUCKET_REGION 
 
+      - name: Generate backend config
+        run: |
+         cat > backend.hcl <<EOF
+         bucket = "${PROJECT_ID}-${STATE_BUCKET}"
+         prefix = "terraform/state/"
+         EOF
+
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 

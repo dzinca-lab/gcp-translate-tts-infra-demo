@@ -12,14 +12,14 @@ if [ $# -ne 3 ]; then
   usage
 fi
 
-echo "Checking if GCS bucket exists: gs://${STATE_BUCKET}"
+echo "Checking if GCS bucket exists: gs://${PROJECT_ID}-${STATE_BUCKET}"
 
 if ! gsutil ls -b "gs://${PROJECT_ID}-${STATE_BUCKET}" > /dev/null 2>&1; then
-  echo "Creating GCS bucket: ${STATE_BUCKET}"
+  echo "Creating GCS bucket: ${PROJECT_ID}-${STATE_BUCKET}"
   gcloud storage buckets create "gs://${PROJECT_ID}-${STATE_BUCKET}" \
     --project="${PROJECT_ID}" \
     --location="${REGION}" \
     --uniform-bucket-level-access
 else
-  echo "GCS bucket already exists: ${STATE_BUCKET}"
+  echo "GCS bucket already exists: ${PROJECT_ID}-${STATE_BUCKET}"
 fi
