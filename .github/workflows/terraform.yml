@@ -157,5 +157,6 @@ jobs:
         run: terraform apply -input=false -auto-approve tfplan
         env:
           TARGET_LANGUAGE: "fr"
-          TF_VAR_SOURCE_BUCKET_NAME: in-bucket-${{ vars.GCP_PROJECT_ID }}
-          TF_VAR_TARGET_BUCKET_NAME: out-bucket-${{ vars.GCP_PROJECT_ID }}
+          TF_VAR_SOURCE_BUCKET_NAME: "in-bucket-${{ vars.GCP_PROJECT_ID }}"
+          TF_VAR_TARGET_BUCKET_NAME: "out-bucket-${{ vars.GCP_PROJECT_ID }}"
+          TF_VAR_CODE_BUCKET_NAME: "ttts-code-${{ vars.GCP_PROJECT_ID }}"
