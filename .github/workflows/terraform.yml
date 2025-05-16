@@ -45,7 +45,7 @@ jobs:
          prefix = "terraform/state/$ENV_NAME.tfstate"
          EOF
         env:
-          ENV_NAME: ${{ github.environment }}
+          ENV_NAME: ${{ steps.context.outputs.environment  }}
 
 
       - name: Set up Terraform
