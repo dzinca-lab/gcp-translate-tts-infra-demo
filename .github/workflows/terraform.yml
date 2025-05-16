@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload Artifacts to GCS
         run: |
-            gsutil cp ./apps/translation/cloud_function_translate_source.zip gs://${{ vars.GCP_PROJECT_ID }}-$CODE_BUCKET" 
+            gsutil cp ./apps/translation/cloud_function_translate_source.zip gs://${{ vars.GCP_PROJECT_ID }}-${{ $CODE_BUCKET }}" 
 
   plan:
     runs-on: ubuntu-latest
