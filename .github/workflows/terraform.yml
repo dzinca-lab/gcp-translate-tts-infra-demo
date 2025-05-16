@@ -52,9 +52,16 @@ jobs:
         run: terraform init -backend-config=backend.hcl
 
 
-      - name: Run gcloud command
-        run: |
-          gcloud auth list
-          gcloud config set project ${{ vars.GCP_PROJECT_ID }}
+      - name: Run Terraform Plan
+        run: terraform plan -out=tfplan -input=false
+        env:
+          ENV_NAME: "production"
+          TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
+          TF_VAR_location: ${{ vars.GCP_REGION }}
+
+      - name: Show Terraform Plan
+        run: terraform show -json tfplan | jq -r '.resource_changes[] | select(.change.actions[0] == "create") | .address'
+        id: plan
+        continue-on-error: true
 
 
