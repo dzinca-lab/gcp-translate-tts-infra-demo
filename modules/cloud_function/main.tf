@@ -1,10 +1,10 @@
-# Create a service account for the Cloud Function
+
 resource "google_service_account" "translate_function_sa" {
   account_id   = "${var.function_translate_name}-sa"
   display_name = "Service Account for ${var.function_translate_name}"
 }
 
-# Grant the service account permissions to access the source and target buckets
+
 resource "google_project_iam_member" "translate_function_sa_storage_access" {
   for_each = toset([
     "roles/storage.objectViewer",  # Read access to source bucket
@@ -15,7 +15,7 @@ resource "google_project_iam_member" "translate_function_sa_storage_access" {
   member  = "serviceAccount:${google_service_account.translate_function_sa.email}"
 }
 
-# Grant the service account permissions to execute the Cloud Function
+
 resource "google_project_iam_member" "translate_function_sa_cloudfunctions_invoker" {
   project = var.project_id
   role    = "roles/cloudfunctions.invoker"

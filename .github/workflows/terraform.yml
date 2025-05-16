@@ -156,6 +156,6 @@ jobs:
       - name: Run Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
         env:   
-          TARGET_LANGUAGE: "fr"
+          TARGET_LANGUAGE: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_CODE_BUCKET_NAME: "ttts-code-${{ vars.GCP_PROJECT_ID }}"
 
