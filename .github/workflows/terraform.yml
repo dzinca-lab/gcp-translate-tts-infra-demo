@@ -19,7 +19,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
+      - name: Debug github context
+        run: echo "${{ toJson(github) }}"
 
+        
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
