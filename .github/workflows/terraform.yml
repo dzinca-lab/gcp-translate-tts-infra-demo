@@ -41,7 +41,7 @@ jobs:
         
       - name: Build and Upload Translation Cloud Function
         id: build_function
-        uses: ./.github/actions/build-and-upload
+        uses: ./.github/actions/build-and-upload-function
         with:
           working-directory: ./apps/translation
           code-bucket: $CODE_BUCKET
