@@ -21,9 +21,9 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
-        zip -r ${{ inputs.function-artifact-name }}_${{ github.sha }}.zip .
+        zip -r ${{ inputs.function-artifact-name }}.zip .
     - name: Upload Artifacts to GCS
       working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
-        gsutil cp ${{ inputs.function-artifact-name }}_${{ github.sha }}.zip gs://${{ inputs.gcp-project-id }}-${{ inputs.code-bucket }}
+        gsutil cp ${{ inputs.function-artifact-name }}.zip gs://${{ inputs.gcp-project-id }}-${{ inputs.code-bucket }}
