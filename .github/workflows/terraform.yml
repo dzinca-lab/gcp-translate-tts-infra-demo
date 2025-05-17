@@ -47,7 +47,7 @@ jobs:
           code-bucket: ${{ env.CODE_BUCKET }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
-          python-version: ${{ env.PYTHON_VERSION }}
+          
       
   plan:
     runs-on: ubuntu-latest
@@ -100,6 +100,7 @@ jobs:
           TF_VAR_TARGET_BUCKET_NAME: "out-bucket-${{ vars.GCP_PROJECT_ID }}"
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
+          TF_VAR_python_version: "${{ env.PYTHON_VERSION }}"
 
       - name: Copy Artifacts
         run: |

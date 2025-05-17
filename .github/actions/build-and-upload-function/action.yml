@@ -14,10 +14,6 @@ inputs:
   function-artifact-name:
     description: 'The name of the function artifact'
     required: true
-  python-version:
-    description: 'Python version to use'
-    required: false
-    default: '3.9'
 runs:
   using: "composite"
   steps:
