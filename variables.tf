@@ -39,3 +39,9 @@ variable "cloud_function_translate_archive" {
   description = "The name of the archive file for the Cloud Function"
   
 }
+
+variable "python_version" {
+  type = string
+
+  
+}

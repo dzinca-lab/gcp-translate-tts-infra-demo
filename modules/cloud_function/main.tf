@@ -26,7 +26,7 @@ resource "google_project_iam_member" "translate_function_sa_cloudfunctions_invok
 resource "google_cloudfunctions_function" "translate_function" {
   name        = var.function_translate_name
   description = "Cloud Function to translate files"
-  runtime     = "python39"
+  runtime     = var.python_version
   project     = var.project_id
   region      = var.gcp_region
   available_memory_mb = 256

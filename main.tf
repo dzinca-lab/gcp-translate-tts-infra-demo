@@ -22,6 +22,7 @@ module "translate_function" {
   source = "./modules/cloud_function"
   project_id = var.project_id
   gcp_region = var.gcp_region
+  python_version = "python${var.python_version}"
   function_translate_name = var.function_translate_name
   code_bucket_name =  var.code_bucket_name
   cloud_function_translate_archive = var.cloud_function_translate_archive

@@ -6,10 +6,10 @@ on:
     branches: [main]
 
 env:
-  TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source"
+  TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
   CODE_BUCKET: ttts-code
   CODE_BUCKET_REGION: "us-central1"
-  PYTHON_VERSION: 3.9
+  PYTHON_VERSION: 39
 
 permissions:
   id-token: write
@@ -149,3 +149,4 @@ jobs:
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
           TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
+          TF_VAR_python_version: "${{ env.PYTHON_VERSION }}"

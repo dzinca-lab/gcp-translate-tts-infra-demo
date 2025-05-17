@@ -33,3 +33,9 @@ variable "target_language" {
   type = string
   default = "fr"
 }
+
+variable "python_version" {
+  type = string
+
+  
+}
