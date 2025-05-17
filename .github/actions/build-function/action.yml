@@ -1,0 +1,46 @@
+# .github/actions/build-and-upload/action.yml
+name: 'Build and Upload Cloud Function'
+description: 'Builds function code and uploads it to GCS'
+inputs:
+  working-directory:
+    description: 'The working directory of the application'
+    required: true
+  code-bucket:
+    description: 'The GCS bucket to upload the code to'
+    required: true
+  gcp-project-id:
+     description: "GCP Project ID"
+     required: true
+  function-artifact-name:
+    description: 'The name of the function artifact'
+    required: true
+  python-version:
+    description: 'Python version to use'
+    required: false
+    default: '3.9'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '${{ inputs.python-version }}'
+    - name: Install dependencies
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        deactivate
+    - name: Zip function code
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: |
+        zip -r ${{ inputs.function-artifact-name }}_${{ github.sha }}.zip .
+    - name: Upload Artifacts to GCS
+      shell: bash
+      run: |
+        gsutil cp ./${{ inputs.working-directory }}_/${{ inputs.function-artifact-name }}__${{ github.sha }}.zip gs://${{ inputs.gcp-project-id }}-${{ inputs.code-bucket }}
+

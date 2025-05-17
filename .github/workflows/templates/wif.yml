@@ -1,0 +1,33 @@
+name: Worlkflow Identity Federation
+on:
+  workflow_call:
+    inputs:
+      gcp_project_id:
+        description: 'Google Cloud Project ID'
+        required: true
+        type: string
+      service_account_name:
+        description: 'Service Account Name'
+        required: true
+        type: string
+      pool_id:
+        description: 'Workload Identity Pool ID'
+        required: true
+        type: string
+      provider_id:
+        description: 'Workload Identity Provider ID'
+        required: true
+        type: string
+      token_format:
+        description: 'Token Format'
+        required: true
+        type: string
+
+jobs:
+    authenticate:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: ${{ inputs.token_format }}
+          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ inputs.pool_id }}/providers/${{ inputs.provider_id }}"
+          service_account: ${{ inputs.service_account_name }}

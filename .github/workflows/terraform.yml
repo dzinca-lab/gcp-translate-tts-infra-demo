@@ -6,7 +6,10 @@ on:
     branches: [main]
 
 env:
-  TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
+  TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source"
+  CODE_BUCKET: ttts-code
+  CODE_BUCKET_REGION: "us-central1"
+  PYTHON_VERSION: 3.9
 
 permissions:
   id-token: write
@@ -17,33 +20,9 @@ jobs:
     name: Build Functions
     runs-on: ubuntu-latest
     environment: PROD
-    env:
-      CODE_BUCKET: ttts-code
-      CODE_BUCKET_REGION: "us-central1"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9' 
-
-      - name: Install dependencies
-        working-directory: ./apps/translation
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          deactivate
-
-      - name: Zip function code
-        working-directory: ./apps/translation 
-        run: |
-          zip -r cloud_function_translate_source_${{ github.sha }}.zip .
-    
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -55,15 +34,21 @@ jobs:
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Ensure GCS bucket exists for Terraform state
+      - name: Ensure GCS bucket exists for function artifacts
         run: |
           chmod +x ./scripts/create_bucket.sh
-          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $CODE_BUCKET $CODE_BUCKET_REGION 
-
-      - name: Upload Artifacts to GCS
-        run: |
-            gsutil cp ./apps/translation/cloud_function_translate_source_${{ github.sha }}.zip gs://${{ vars.GCP_PROJECT_ID }}-$CODE_BUCKET
-
+          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $CODE_BUCKET $CODE_BUCKET_REGION
+        
+      - name: Build and Upload Translation Cloud Function
+        id: build_function
+        uses: ./.github/actions/build-and-upload
+        with:
+          working-directory: ./apps/translation
+          code-bucket: $CODE_BUCKET
+          gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
+          function-artifact-name: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      
   plan:
     runs-on: ubuntu-latest
     environment: PROD

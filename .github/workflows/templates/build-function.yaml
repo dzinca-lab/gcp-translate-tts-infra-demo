@@ -1,0 +1,17 @@
+name: Build Function
+
+on:
+  workflow_call:
+    inputs:
+        gcp_project_id:
+            description: 'Google Cloud Project ID'
+            required: true
+            type: string
+        gcp_region:
+            description: 'Google Cloud Region'
+            required: true
+            type: string
+        service_account_name:
+            description: 'Service Account Name'
+            required: true
+            type: string
