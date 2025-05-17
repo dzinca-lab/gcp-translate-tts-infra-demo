@@ -98,8 +98,8 @@ jobs:
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
           TF_VAR_SOURCE_BUCKET_NAME: "in-bucket-${{ vars.GCP_PROJECT_ID }}"
           TF_VAR_TARGET_BUCKET_NAME: "out-bucket-${{ vars.GCP_PROJECT_ID }}"
-          TF_VAR_CODE_BUCKET_NAME: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
+          TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
 
       - name: Copy Artifacts
         run: |
