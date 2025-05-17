@@ -1,4 +1,4 @@
-name: Terraform Deploy via WIF
+name: Transtate Text To Speech Solution Deployment 
 
 on:
   workflow_dispatch:
