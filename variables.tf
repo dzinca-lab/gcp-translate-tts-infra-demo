@@ -16,6 +16,12 @@ variable "gcp_zone" {
   default     = null
 }
 
+variable "code_bucket_name" {
+  type        = string
+  description = "The name of the bucket where the Cloud Function code is stored"
+  
+}
+
 variable "function_translate_name" {
   type = string
   default = "translate-function"
