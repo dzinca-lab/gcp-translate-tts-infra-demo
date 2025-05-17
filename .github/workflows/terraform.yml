@@ -43,7 +43,7 @@ jobs:
         id: build_function
         uses: ./.github/actions/build-and-upload-function
         with:
-          working-directory: /apps/translation
+          working-directory: ./apps/translation
           code-bucket: ${{ env.CODE_BUCKET }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
