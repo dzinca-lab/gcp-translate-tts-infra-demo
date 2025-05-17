@@ -24,7 +24,7 @@ module "translate_function" {
   gcp_region = var.gcp_region
   python_version = "python${var.python_version}"
   function_translate_name = var.function_translate_name
-  code_bucket_name =  var.code_bucket_name
+  code_bucket_name =  "${var.project_id}-ttts-code"
   cloud_function_translate_archive = var.cloud_function_translate_archive
   source_bucket_name = "in-bucket-${var.project_id}"
   target_bucket_name = "out-bucket-${var.project_id}"

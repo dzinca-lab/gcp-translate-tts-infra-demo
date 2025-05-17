@@ -7,7 +7,6 @@ on:
 
 env:
   TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
-  CODE_BUCKET: ttts-code
   CODE_BUCKET_REGION: "us-central1"
   PYTHON_VERSION: 39
 
@@ -96,8 +95,6 @@ jobs:
           TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
           TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
-          TF_VAR_SOURCE_BUCKET_NAME: "in-bucket-${{ vars.GCP_PROJECT_ID }}"
-          TF_VAR_TARGET_BUCKET_NAME: "out-bucket-${{ vars.GCP_PROJECT_ID }}"
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
           TF_VAR_python_version: "${{ env.PYTHON_VERSION }}"
@@ -149,5 +146,4 @@ jobs:
         env:   
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
-          TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
           TF_VAR_python_version: "${{ env.PYTHON_VERSION }}"
