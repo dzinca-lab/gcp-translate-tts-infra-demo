@@ -25,15 +25,6 @@ runs:
       uses: actions/setup-python@v5
       with:
         python-version: '${{ inputs.python-version }}'
-    - name: Install dependencies
-      working-directory: ${{ inputs.working-directory }}
-      shell: bash
-      run: |
-        python -m venv venv
-        source venv/bin/activate
-        pip install --upgrade pip
-        pip install -r requirements.txt
-        deactivate
     - name: Zip function code
       working-directory: ${{ inputs.working-directory }}
       shell: bash
@@ -43,4 +34,3 @@ runs:
       shell: bash
       run: |
         gsutil cp ${{ inputs.working-directory }}/${{ inputs.function-artifact-name }}__${{ github.sha }}.zip gs://${{ inputs.gcp-project-id }}-${{ inputs.code-bucket }}
-
