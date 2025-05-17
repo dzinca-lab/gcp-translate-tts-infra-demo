@@ -39,3 +39,8 @@ variable "python_version" {
 
   
 }
+variable "code_bucket_suffix" {
+  type = string
+
+  
+}
