@@ -31,6 +31,7 @@ runs:
       run: |
         zip -r ${{ inputs.function-artifact-name }}_${{ github.sha }}.zip .
     - name: Upload Artifacts to GCS
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
       run: |
         gsutil cp ${{ inputs.function-artifact-name }}__${{ github.sha }}.zip gs://${{ inputs.gcp-project-id }}-${{ inputs.code-bucket }}
