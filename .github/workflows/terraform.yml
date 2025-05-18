@@ -1,4 +1,4 @@
-name: Transtate Text To Speech Solution Deployment 
+name: Transtate & Text To Speech Solution Deployment 
 
 on:
   workflow_dispatch:
