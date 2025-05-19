@@ -50,8 +50,8 @@ module "text_to_speech_function" {
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name = "${var.project_id}-${ var.code_bucket_suffix }"
   cloud_function_archive = "${var.cloud_function_archive_prefix}-${ text_to_speech_function.function_name}.zip"
-  source_bucket_name = out-bucket.bucket_name
-  target_bucket_name = audio-bucket.bucket_name
+  source_bucket_name = module.out-bucket.bucket_name
+  target_bucket_name = module.audio-bucket.bucket_name
   function_entry_point = "text_to_speech_converter"
   depends_on = [module.in-bucket, module.out-bucket]
   
