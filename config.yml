@@ -1,0 +1,18 @@
+parameters:
+  function_archive_prefix: "cloud_function_source"
+  code_bucket_region: "us-central1"
+  code_bucket_suffix: "ttts-code"
+  python_version: 39
+
+apis:
+  - artifactregistry.googleapis.com
+  - cloudbuild.googleapis.com
+  - cloudfunctions.googleapis.com
+  - cloudresourcemanager.googleapis.com
+  - containerregistry.googleapis.com
+  - pubsub.googleapis.com
+  - storage-api.googleapis.com
+  - storage-component.googleapis.com
+  - storage.googleapis.com
+  - translate.googleapis.com
+  - texttospeech.googleapis.com  

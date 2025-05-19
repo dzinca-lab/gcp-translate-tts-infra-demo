@@ -7,9 +7,6 @@ on:
 
 env:
   FUNCTION_ARCHIVE_PREFIX: "cloud_function_source_${{ github.sha}}"
-  CODE_BUCKET_REGION: "us-central1"
-  CODE_BUCKET_SUFFIX: "ttts-code"
-  PYTHON_VERSION: 39
 
 permissions:
   id-token: write
@@ -44,7 +41,7 @@ jobs:
         uses: ./.github/actions/build-and-upload-function
         with:
           working-directory: ./apps/translation
-          code-bucket: ${{ env.CODE_BUCKET_SUFFIX }}
+          code-bucket: ${{ vars.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-translate-function.zip
 
@@ -53,7 +50,7 @@ jobs:
         uses: ./.github/actions/build-and-upload-function
         with:
           working-directory: ./apps/text-to-speech
-          code-bucket: ${{ env.CODE_BUCKET_SUFFIX }}
+          code-bucket: ${{ vars.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech-function.zip
           
@@ -108,8 +105,8 @@ jobs:
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
-          TF_VAR_python_version: "${{ env.PYTHON_VERSION }}"
-          TF_VAR_code_bucket_suffix: "${{ env.CODE_BUCKET_SUFFIX }}"
+          TF_VAR_python_version: "${{ vars.PYTHON_VERSION }}"
+          TF_VAR_code_bucket_suffix: "${{ vars.CODE_BUCKET_SUFFIX }}"
 
       - name: Copy Artifacts
         run: |
@@ -159,5 +156,5 @@ jobs:
         env:   
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
           TF_VAR_cloud_function_archive_prefix: ${{ env.FUNCTION_ARCHIVE_PREFIX }}
-          TF_VAR_python_version: "${{ env.PYTHON_VERSION }}"
-          TF_VAR_code_bucket_suffix: "${{ env.CODE_BUCKET_SUFFIX }}"
+          TF_VAR_python_version: "${{ vars.PYTHON_VERSION }}"
+          TF_VAR_code_bucket_suffix: "${{ vars.CODE_BUCKET_SUFFIX }}"

@@ -1,5 +1,5 @@
 locals {
-  apis_config = yamldecode(file("${path.module}/apis.yaml"))
+  apis_config = yamldecode(file("../config.yaml"))
   api_list    = local.apis_config.apis
 }
 
