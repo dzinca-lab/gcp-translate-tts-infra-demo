@@ -49,6 +49,29 @@ jobs:
           code-bucket: ${{ vars.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech-function.zip
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Checkov scan
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: terraform,github_actions
+          quiet: false
+          soft_fail: true
+          output_format: sarif
+          output_file: checkov-results.sarif
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: checkov-results.sarif
+          category: checkov
   plan:
     runs-on: ubuntu-latest
     name: Terraform Plan
@@ -56,7 +79,6 @@ jobs:
     needs: build
     env:
       STATE_BUCKET: tf-state-production
-      STATE_BUCKET_REGION: us-central1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -71,7 +93,7 @@ jobs:
       - name: Ensure GCS bucket exists for Terraform state
         run: |
           chmod +x ./scripts/create_bucket.sh
-          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $STATE_BUCKET $STATE_BUCKET_REGION 
+          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $STATE_BUCKET ${{ vars.GCP_REGION}} 
 
       - name: Generate backend config
         run: |
