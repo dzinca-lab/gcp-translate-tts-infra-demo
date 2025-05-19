@@ -32,9 +32,9 @@ module "translate_function" {
   function_name = "translate-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name =  "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.translate_function.function_name}.zip"
-  source_bucket_name = in-bucket.bucket_name
-  target_bucket_name = out-bucket.bucket_name
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.function_name }.zip"
+  source_bucket_name = module.in-bucket.bucket_name
+  target_bucket_name = module.out-bucket.bucket_name
   target_language = var.target_language
   function_entry_point = "translate_file_on_upload"
   depends_on = [module.in-bucket, module.out-bucket]
@@ -49,7 +49,7 @@ module "text_to_speech_function" {
   function_name = "text-to-speech-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name = "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ text_to_speech_function.function_name}.zip"
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.function_name  }.zip"
   source_bucket_name = module.out-bucket.bucket_name
   target_bucket_name = module.audio-bucket.bucket_name
   function_entry_point = "text_to_speech_converter"
