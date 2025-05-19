@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 env:
-  TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
+  TRANSLATE_FUNCTION_ARCHIVE: "${{ vars.TRANSLATE_FUNCTION_ARCHIVE}}_${{ github.sha }}.${{ vars.TRANSLATE_FUNCTION_ARCHIVE_TYPE}}"
   CODE_BUCKET_REGION: "us-central1"
   CODE_BUCKET_SUFFIX: "ttts-code"
   PYTHON_VERSION: 39
@@ -19,7 +19,6 @@ jobs:
   build:
     name: Build Functions
     runs-on: ubuntu-latest
-    environment: PROD
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,7 +36,7 @@ jobs:
       - name: Ensure GCS bucket exists for function artifacts
         run: |
           chmod +x ./scripts/create_bucket.sh
-          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $CODE_BUCKET_SUFFIX $CODE_BUCKET_REGION
+          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} ${{ vars.CODE_BUCKET_SUFFIX }} ${{ vars.GCP_REGION }}
         
       - name: Build and Upload Translation Cloud Function
         id: build_function
@@ -51,7 +50,7 @@ jobs:
       
   plan:
     runs-on: ubuntu-latest
-    environment: PROD
+    environment: production
     needs: build
     env:
       STATE_BUCKET: tf-state-production
@@ -64,8 +63,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: "access_token"
-          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
-          service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
+          workload_identity_provider: "projects/${{ secrets.PROD_GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.PROD_POOL_ID }}/providers/${{ vars.PROD_PROVIDER_ID }}"
+          service_account: ${{ vars.PROD_SERVICE_ACCOUNT_NAME }}
 
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
@@ -73,12 +72,12 @@ jobs:
       - name: Ensure GCS bucket exists for Terraform state
         run: |
           chmod +x ./scripts/create_bucket.sh
-          ./scripts/create_bucket.sh ${{ vars.GCP_PROJECT_ID }} $STATE_BUCKET $STATE_BUCKET_REGION 
+          ./scripts/create_bucket.sh ${{ vars.PROD_GCP_PROJECT_ID }} $STATE_BUCKET $STATE_BUCKET_REGION 
 
       - name: Generate backend config
         run: |
           cat > backend.hcl <<EOF
-          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
+          bucket = "${{ vars.PROD_GCP_PROJECT_ID }}-$STATE_BUCKET"
           prefix = "terraform/"
           EOF
         env:
