@@ -3,6 +3,7 @@ from google.cloud import storage
 from google.cloud import texttospeech
 
 TARGET_LANGUAGE = os.environ.get("TARGET_LANGUAGE") 
+DESTINATION_BUCKET = os.environ.get("TARGET_BUCKET_NAME")  # Set in Cloud Function configuration
 
 def text_to_speech_converter(data, context):
     """
