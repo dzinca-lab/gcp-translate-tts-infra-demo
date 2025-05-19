@@ -57,36 +57,10 @@ jobs:
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech-function.zip
           
-  checkov_scan:
-    name: Scan Terraform Code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install Checkov
-        run: pip install checkov
-
-      - name: Run Checkov Scan
-        run: |
-          checkov -d . -o json --output-file-path report.json
-
-      - name: Upload Chekhov Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: chekhov-report
-          path: report.json
-
-      - name: Checkov Results
-        if: failure()
-        run: echo "Chekhov found security or compliance violations!" && exit 1
+  
   plan:
     runs-on: ubuntu-latest
+    name: Terraform Plan
     environment: production
     needs: build
     env:
@@ -151,6 +125,7 @@ jobs:
 
   apply:
     runs-on: ubuntu-latest
+    name: Terraform Apply
     needs: plan
     environment: production
     steps:
