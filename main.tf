@@ -4,7 +4,7 @@ locals {
 }
 
 module "enable_apis" {
-  source     = "./enable_apis"
+  source     = "./project_apis"
   project_id = var.project_id
 }
 
