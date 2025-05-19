@@ -6,8 +6,7 @@ on:
     branches: [main]
 
 env:
-  TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
-  SPEECH_FUNCTION_ARCHIVE: "cloud_function_speech_source_${{ github.sha }}.zip"
+  FUNCTION_ARCHIVE_PREFIX: "cloud_function_source"
   CODE_BUCKET_REGION: "us-central1"
   CODE_BUCKET_SUFFIX: "ttts-code"
   PYTHON_VERSION: 39
@@ -47,7 +46,7 @@ jobs:
           working-directory: ./apps/translation
           code-bucket: ${{ env.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
-          function-artifact-name: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
+          function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-translation.zip
 
       - name: Build and Upload Translation Cloud Function
         id: build_speech_function
@@ -56,7 +55,7 @@ jobs:
           working-directory: ./apps/text-to-speech
           code-bucket: ${{ env.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
-          function-artifact-name: ${{ env.SPEECH_FUNCTION_ARCHIVE }}
+          function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech.zip
           
       
   plan:
@@ -103,7 +102,7 @@ jobs:
       - name: Run Terraform Plan
         run: terraform plan -out=tfplan -input=false
         env:
-          TF_VAR_cloud_function_translate_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
+          TF_VAR_cloud_function_archive: ${{ env.TRANSLATE_FUNCTION_ARCHIVE }}
           TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
           TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"

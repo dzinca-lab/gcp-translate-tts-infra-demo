@@ -1,11 +1,11 @@
 
-resource "google_service_account" "translate_function_sa" {
+resource "google_service_account" "function_sa" {
   account_id   = "${var.function_name}-sa"
   display_name = "Service Account for ${var.function_name}"
 }
 
 
-resource "google_project_iam_member" "translate_function_sa_storage_access" {
+resource "google_project_iam_member" "function_sa_storage_access" {
   for_each = toset([
     "roles/storage.objectViewer",  # Read access to source bucket
     "roles/storage.objectCreator" # Write access to target bucket

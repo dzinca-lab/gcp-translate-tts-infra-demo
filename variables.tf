@@ -6,7 +6,7 @@ variable "project_id" {
 variable "gcp_region" {
   type        = string
   description = "The GCP region to deploy resources in"
-  default     = "us-central1"
+
 }
 
 # Optional variables
@@ -29,7 +29,7 @@ variable "target_language" {
 
 
 
-variable "cloud_function_archive" {
+variable "cloud_function_archive_prefix" {
   type = string
   description = "The name of the archive file for the Cloud Function"
   
