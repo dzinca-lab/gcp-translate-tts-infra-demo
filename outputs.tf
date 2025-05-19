@@ -1,24 +1,34 @@
 output "translate_function_name" {
   description = "The name of the Translate Cloud Function"
-  value       = google_cloudfunctions_function.translate_function.name
+  value       = module.translate_function.function_name
 }
 
 output "translate_function_url" {
   description = "The URL of the Translate Cloud Function"
-  value       = google_cloudfunctions_function.translate_function.https_trigger_url
+  value       = module.translate_function.function_url
+}
+
+output "text_to_speech_function_name" {
+  description = "The name of the Text-to-Speech Cloud Function"
+  value       = module.text_to_speech_function.function_name
+}
+
+output "text_to_speech_function_url" {
+  description = "The URL of the Text-to-Speech Cloud Function"
+  value       = module.text_to_speech_function.function_url
 }
 
 output "source_bucket_name" {
   description = "The name of the source bucket"
-  value       = google_storage_bucket.in_bucket.name
+  value       = module.in_bucket.bucket_name
 }
 
 output "target_bucket_name" {
   description = "The name of the target bucket"
-  value       = google_storage_bucket.out_bucket.name
+  value       = module.out_bucket.bucket_name
 }
 
 output "audio_bucket_name" {
   description = "The name of the audio bucket"
-  value       = google_storage_bucket.audio_bucket.name
+  value       = module.audio_bucket.bucket_name
 }
