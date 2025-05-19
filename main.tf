@@ -1,3 +1,10 @@
+locals {
+  translate_function_name= "translate-function"
+  speech_function_name= "text-to-speech-function"
+}
+
+
+
 module "in-bucket" {
   source = "./modules/storage"
   project_id = var.project_id
@@ -24,6 +31,9 @@ module "audio-bucket" {
 }
 
 
+
+
+
 module "translate_function" {
   source = "./modules/cloud_function"
   project_id = var.project_id
@@ -32,7 +42,7 @@ module "translate_function" {
   function_name = "translate-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name =  "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.function_name }.zip"
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ translate_function_name.translate_function_name }.zip"
   source_bucket_name = module.in-bucket.bucket_name
   target_bucket_name = module.out-bucket.bucket_name
   target_language = var.target_language
@@ -49,7 +59,7 @@ module "text_to_speech_function" {
   function_name = "text-to-speech-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name = "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.function_name  }.zip"
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ local.speech_function_name  }.zip"
   source_bucket_name = module.out-bucket.bucket_name
   target_bucket_name = module.audio-bucket.bucket_name
   function_entry_point = "text_to_speech_converter"
