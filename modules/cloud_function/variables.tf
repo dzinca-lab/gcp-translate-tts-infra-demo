@@ -31,7 +31,7 @@ variable "target_bucket_name" {
 
 variable "target_language" {
   type = string
-  default = "fr"
+
 }
 
 variable "python_version" {
