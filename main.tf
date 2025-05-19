@@ -3,7 +3,10 @@ locals {
   speech_function_name= "text-to-speech-function"
 }
 
-
+module "enable_apis" {
+  source     = "./enable_apis"
+  project_id = var.project_id
+}
 
 module "in-bucket" {
   source = "./modules/storage"
