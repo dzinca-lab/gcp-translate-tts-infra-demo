@@ -22,11 +22,6 @@ variable "code_bucket_name" {
   
 }
 
-variable "function_name" {
-  type = string
-  default = "translate-function"
-  description = "Name of the Cloud Function for file translation"
-}
 
 variable "target_language" {
   type = string
@@ -61,7 +56,6 @@ variable "function_entry_point" {
 
 variable "function_name" {
   type = string
-  default = "text-to-speech-function"
   description = "Name of the Cloud Function for text-to-speech"
   
 }
