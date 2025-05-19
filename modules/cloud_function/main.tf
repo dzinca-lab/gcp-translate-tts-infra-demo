@@ -12,14 +12,14 @@ resource "google_project_iam_member" "function_sa_storage_access" {
   ])
   project = var.project_id
   role    = each.key
-  member  = "serviceAccount:${google_service_account.translate_function_sa.email}"
+  member  = "serviceAccount:${google_service_account.function_sa.email}"
 }
 
 
-resource "google_project_iam_member" "translate_function_sa_cloudfunctions_invoker" {
+resource "google_project_iam_member" "function_sa_cloudfunctions_invoker" {
   project = var.project_id
   role    = "roles/cloudfunctions.invoker"
-  member  = "serviceAccount:${google_service_account.translate_function_sa.email}"
+  member  = "serviceAccount:${google_service_account.function_sa.email}"
 }
 
 # Update the Cloud Function to use the service account
@@ -32,7 +32,7 @@ resource "google_cloudfunctions_function" "translate_function" {
   available_memory_mb = 256
   source_archive_bucket = var.code_bucket_name
   source_archive_object = var.cloud_function_archive
-  service_account_email = google_service_account.translate_function_sa.email
+  service_account_email = google_service_account.function_sa.email
 
   event_trigger {
     event_type = "google.storage.object.finalize"
