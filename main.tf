@@ -34,7 +34,7 @@ module "audio-bucket" {
 
 
 
-module "translate_function" {
+module "tt_function" {
   source = "./modules/cloud_function"
   project_id = var.project_id
   gcp_region = var.gcp_region
@@ -51,7 +51,7 @@ module "translate_function" {
   
 }
 
-module "text_to_speech_function" {
+module "tt_function" {
   source = "./modules/cloud_function"
   project_id = var.project_id
   gcp_region = var.gcp_region

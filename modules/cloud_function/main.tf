@@ -23,7 +23,7 @@ resource "google_project_iam_member" "function_sa_cloudfunctions_invoker" {
 }
 
 # Update the Cloud Function to use the service account
-resource "google_cloudfunctions_function" "translate_function" {
+resource "google_cloudfunctions_function" "tt_function" {
   name        = var.function_name
   description = "Cloud Function to translate files"
   runtime     = var.python_version
