@@ -20,15 +20,15 @@ output "text_to_speech_function_url" {
 
 output "source_bucket_name" {
   description = "The name of the source bucket"
-  value       = module.in_bucket.bucket_name
+  value       = module.in-bucket.bucket_name
 }
 
 output "target_bucket_name" {
   description = "The name of the target bucket"
-  value       = module.out_bucket.bucket_name
+  value       = module.out-bucket.bucket_name
 }
 
 output "audio_bucket_name" {
   description = "The name of the audio bucket"
-  value       = module.audio_bucket.bucket_name
+  value       = module.audio-bucket.bucket_name
 }
