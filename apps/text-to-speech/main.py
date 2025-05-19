@@ -74,7 +74,8 @@ def text_to_speech_converter(data, context):
     destination_blob = destination_bucket.blob(audio_file_name)
 
     try:
-        destination_blob.upload_from_string(response.audio.audio_content)
+        # Use response.audio_content directly
+        destination_blob.upload_from_string(response.audio_content)
     except Exception as e:
         print(f"Error uploading audio file to {destination_bucket_name}: {e}")
         return  # Exit if upload fails
