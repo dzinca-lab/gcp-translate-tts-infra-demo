@@ -29,10 +29,10 @@ module "translate_function" {
   project_id = var.project_id
   gcp_region = var.gcp_region
   python_version = "python${var.python_version}"
-  function_name = var.function_name
+  function_name = "translate-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name =  "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.function_name}.zip"
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ translate_function.function_name}.zip"
   source_bucket_name = in-bucket.bucket_name
   target_bucket_name = out-bucket.bucket_name
   target_language = var.target_language
@@ -46,10 +46,10 @@ module "text_to_speech_function" {
   project_id = var.project_id
   gcp_region = var.gcp_region
   python_version = "python${var.python_version}"
-  function_name = var.function_name
+  function_name = "text-to-speech-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name = "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ var.function_name}.zip"
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ text_to_speech_function.function_name}.zip"
   source_bucket_name = out-bucket.bucket_name
   target_bucket_name = audio-bucket.bucket_name
   function_entry_point = "text_to_speech_converter"

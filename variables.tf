@@ -48,15 +48,3 @@ variable "code_bucket_suffix" {
   
 }
 
-variable "function_entry_point" {
-  type = string
-  description = "The entry point for the Cloud Function"
-  
-}
-
-variable "function_name" {
-  type = string
-  description = "Name of the Cloud Function for text-to-speech"
-  
-}
-
