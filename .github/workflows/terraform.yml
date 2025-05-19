@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 env:
-  FUNCTION_ARCHIVE_PREFIX: "cloud_function_source"
+  FUNCTION_ARCHIVE_PREFIX: "cloud_function_source_${{ github.sha}}"
   CODE_BUCKET_REGION: "us-central1"
   CODE_BUCKET_SUFFIX: "ttts-code"
   PYTHON_VERSION: 39
@@ -46,7 +46,7 @@ jobs:
           working-directory: ./apps/translation
           code-bucket: ${{ env.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
-          function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-translation.zip
+          function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-translate-function.zip
 
       - name: Build and Upload Translation Cloud Function
         id: build_speech_function
@@ -55,7 +55,7 @@ jobs:
           working-directory: ./apps/text-to-speech
           code-bucket: ${{ env.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
-          function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech.zip
+          function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech-function.zip
           
       
   plan:

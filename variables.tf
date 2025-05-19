@@ -47,3 +47,9 @@ variable "code_bucket_suffix" {
 
   
 }
+
+
+variable "function_name" {
+  type = string
+
+}
