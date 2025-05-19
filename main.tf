@@ -42,7 +42,7 @@ module "translate_function" {
   function_name = "translate-function"
   code_bucket_suffix = var.code_bucket_suffix
   code_bucket_name =  "${var.project_id}-${ var.code_bucket_suffix }"
-  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ translate_function_name.translate_function_name }.zip"
+  cloud_function_archive = "${var.cloud_function_archive_prefix}-${ local.translate_function_name }.zip"
   source_bucket_name = module.in-bucket.bucket_name
   target_bucket_name = module.out-bucket.bucket_name
   target_language = var.target_language
