@@ -7,7 +7,7 @@ on:
 
 env:
   TRANSLATE_FUNCTION_ARCHIVE: "cloud_function_translate_source_${{ github.sha }}.zip"
-  SPEECH_FUNCTION_ARCHIVE: "cloud_function_speech_source${{ github.sha }}.zip"
+  SPEECH_FUNCTION_ARCHIVE: "cloud_function_speech_source_${{ github.sha }}.zip"
   CODE_BUCKET_REGION: "us-central1"
   CODE_BUCKET_SUFFIX: "ttts-code"
   PYTHON_VERSION: 39
