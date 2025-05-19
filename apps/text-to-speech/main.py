@@ -2,6 +2,8 @@ import os
 from google.cloud import storage
 from google.cloud import texttospeech
 
+TARGET_LANGUAGE = os.environ.get("TARGET_LANGUAGE") 
+
 def text_to_speech_converter(data, context):
     """
     This Cloud Function is triggered by a file upload to a Cloud Storage bucket.
@@ -47,7 +49,7 @@ def text_to_speech_converter(data, context):
     # 6. Create Text-to-Speech request
     synthesis_input = texttospeech.SynthesisInput(text=text_content)
     voice = texttospeech.VoiceSelectionParams(
-        language_code="en-US",  # You can change the language code
+        language_code = TARGET_LANGUAGE,  # You can change the language code
         ssml_gender=texttospeech.SsmlVoiceGender.MALE,  # You can change the gender
     )
     audio_config = texttospeech.AudioConfig(
