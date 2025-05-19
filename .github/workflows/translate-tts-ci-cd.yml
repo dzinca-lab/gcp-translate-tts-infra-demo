@@ -9,6 +9,9 @@ env:
 permissions:
   id-token: write
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     name: Build Functions
@@ -38,7 +41,7 @@ jobs:
           code-bucket: ${{ vars.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-translate-function.zip
-      - name: Build and Upload Translation Cloud Function
+      - name: Build and Upload Text to Speech Cloud Function
         id: build_speech_function
         uses: ./.github/actions/build-and-upload-function
         with:
