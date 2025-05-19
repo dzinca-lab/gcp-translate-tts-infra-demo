@@ -1,0 +1,31 @@
+# Python-related
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.env
+.env
+venv/
+*.egg-info/
+*.log
+
+# Terraform-related
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+terraform.tfvars
+*.tfvars.json
+
+# Cloud Function artifacts
+*.zip
+cloud_function_source_*.zip
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+.DS_Store
