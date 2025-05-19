@@ -13,3 +13,12 @@ variable "project_id" {
   description = "The ID of the Google Cloud Project"
   type        = string
 }
+
+
+
+variable "function_speech_name" {
+  type = string
+  default = "text-to-speech-function"
+  description = "Name of the Cloud Function for text-to-speech"
+  
+}

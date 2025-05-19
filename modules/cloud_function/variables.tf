@@ -7,12 +7,12 @@ variable "gcp_region" {
   default = "us-central1"
 }
 
-variable "function_translate_name" {
+variable "function_name" {
   type = string
 
 }
 
-variable "cloud_function_translate_archive" {
+variable "cloud_function_archive" {
   type = string
   
 }
@@ -42,5 +42,11 @@ variable "python_version" {
 variable "code_bucket_suffix" {
   type = string
 
+  
+}
+
+variable "function_entry_point" {
+  type = string
+  description = "The entry point for the Cloud Function"
   
 }
