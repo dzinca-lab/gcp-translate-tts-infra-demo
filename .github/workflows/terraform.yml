@@ -73,7 +73,8 @@ jobs:
         run: pip install checkov
 
       - name: Run Checkov Scan
-        run: checkov -d . -o json -o junit --output-file-path report.json --junit-file-path report.xml
+        run: |
+          checkov -d . -o json --output-file-path report.json
 
       - name: Upload Chekhov Report
         uses: actions/upload-artifact@v4
