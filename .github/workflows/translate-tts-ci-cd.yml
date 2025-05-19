@@ -1,17 +1,14 @@
-name: Transtate & Text To Speech Solution Deployment 
-
-on:
-  workflow_dispatch:
+---
+name: Translate & Text To Speech Solution Deployment
+'on':
+  workflow_dispatch: null
   push:
     branches: [main]
-
 env:
-  FUNCTION_ARCHIVE_PREFIX: "cloud_function_source_${{ github.sha}}"
-
+  FUNCTION_ARCHIVE_PREFIX: cloud_function_source_${{ github.sha}}
 permissions:
   id-token: write
   contents: read
-
 jobs:
   build:
     name: Build Functions
@@ -20,17 +17,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          token_format: "access_token"
-          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
+          token_format: access_token
+          workload_identity_provider: projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}
           service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
-
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
-
       - name: Ensure GCS bucket exists for function artifacts
         run: |
           chmod +x ./scripts/create_bucket.sh
@@ -44,7 +38,6 @@ jobs:
           code-bucket: ${{ vars.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-translate-function.zip
-
       - name: Build and Upload Translation Cloud Function
         id: build_speech_function
         uses: ./.github/actions/build-and-upload-function
@@ -53,8 +46,6 @@ jobs:
           code-bucket: ${{ vars.CODE_BUCKET_SUFFIX }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           function-artifact-name: ${{ env.FUNCTION_ARCHIVE_PREFIX }}-text-to-speech-function.zip
-          
-  
   plan:
     runs-on: ubuntu-latest
     name: Terraform Plan
@@ -62,21 +53,18 @@ jobs:
     needs: build
     env:
       STATE_BUCKET: tf-state-production
-      STATE_BUCKET_REGION: "us-central1"
+      STATE_BUCKET_REGION: us-central1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          token_format: "access_token"
-          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
+          token_format: access_token
+          workload_identity_provider: projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}
           service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
-
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
-
       - name: Ensure GCS bucket exists for Terraform state
         run: |
           chmod +x ./scripts/create_bucket.sh
@@ -89,25 +77,21 @@ jobs:
           prefix = "terraform/"
           EOF
         env:
-          ENV_NAME: "production"
-
+          ENV_NAME: production
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
-
       - name: Initialize Terraform
         run: terraform init -backend-config=backend.hcl
-
       - name: Run Terraform Plan
         run: terraform plan -out=tfplan -input=false
         env:
           TF_VAR_cloud_function_archive_prefix: ${{ env.FUNCTION_ARCHIVE_PREFIX }}
           TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
-          TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
-          TF_VAR_code_bucket_name: "${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}"
-          TF_VAR_python_version: "${{ vars.PYTHON_VERSION }}"
-          TF_VAR_code_bucket_suffix: "${{ vars.CODE_BUCKET_SUFFIX }}"
-
+          TF_VAR_target_language: ${{ vars.TARGET_LANGUAGE }}
+          TF_VAR_code_bucket_name: ${{ vars.GCP_PROJECT_ID }}-${{ env.CODE_BUCKET }}
+          TF_VAR_python_version: ${{ vars.PYTHON_VERSION }}
+          TF_VAR_code_bucket_suffix: ${{ vars.CODE_BUCKET_SUFFIX }}
       - name: Copy Artifacts
         run: |
           mkdir -p output
@@ -119,7 +103,6 @@ jobs:
         with:
           name: terraform-config
           path: output/
-
   apply:
     runs-on: ubuntu-latest
     name: Terraform Apply
@@ -128,33 +111,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          token_format: "access_token"
-          workload_identity_provider: "projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}"
+          token_format: access_token
+          workload_identity_provider: projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}
           service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
-
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
-
       - name: Download Terraform Artifacts
         uses: actions/download-artifact@v4
         with:
           name: terraform-config
           path: .
-
       - name: Initialize Terraform
         run: terraform init -backend-config=backend.hcl
-
       - name: Run Terraform Apply
         run: terraform apply -input=false -auto-approve tfplan
-        env:   
-          TF_VAR_target_language: "${{ vars.TARGET_LANGUAGE }}"
-          TF_VAR_cloud_function_archive_prefix: ${{ env.FUNCTION_ARCHIVE_PREFIX }}
-          TF_VAR_python_version: "${{ vars.PYTHON_VERSION }}"
-          TF_VAR_code_bucket_suffix: "${{ vars.CODE_BUCKET_SUFFIX }}"
