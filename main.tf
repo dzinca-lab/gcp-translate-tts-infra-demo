@@ -62,6 +62,7 @@ module "text_to_speech_function" {
   cloud_function_archive = "${var.cloud_function_archive_prefix}-${ local.speech_function_name  }.zip"
   source_bucket_name = module.out-bucket.bucket_name
   target_bucket_name = module.audio-bucket.bucket_name
+  target_language = var.target_language
   function_entry_point = "text_to_speech_converter"
   depends_on = [module.in-bucket, module.out-bucket]
   
