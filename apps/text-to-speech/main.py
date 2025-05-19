@@ -2,8 +2,7 @@ import os
 from google.cloud import storage
 from google.cloud import texttospeech
 
-TARGET_LANGUAGE = os.environ.get("TARGET_LANGUAGE") 
-DESTINATION_BUCKET = os.environ.get("TARGET_BUCKET_NAME")  # Set in Cloud Function configuration
+TARGET_LANGUAGE = os.environ.get("TARGET_LANGUAGE") # Set in Cloud Function configuration
 
 def text_to_speech_converter(data, context):
     """
@@ -19,7 +18,7 @@ def text_to_speech_converter(data, context):
     # 1. Set up variables from environment and event
     source_bucket_name = data['bucket']
     source_file_name = data['name']
-    destination_bucket_name = os.environ.get('DESTINATION_BUCKET')  # Get from environment variable
+    destination_bucket_name = os.environ.get('TARGET_BUCKET_NAME')  # Get from environment variable
     if not destination_bucket_name:
         raise ValueError("Destination bucket name is not set in environment variable DESTINATION_BUCKET")
 
