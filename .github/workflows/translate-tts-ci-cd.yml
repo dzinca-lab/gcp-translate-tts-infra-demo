@@ -9,6 +9,7 @@ env:
 permissions:
   id-token: write
   contents: read
+  actions: read 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
