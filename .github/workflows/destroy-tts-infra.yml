@@ -32,7 +32,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Initialize Terraform
-        run: terraform init -backend-config=${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET/terraform/default.tfstate
+        run: terraform init -backend-config=gs://${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET/terraform/default.tfstate
 
       - name: Run Terraform Destroy Plan
         run: terraform plan -destroy -out=destroy.tfplan
