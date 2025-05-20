@@ -40,6 +40,9 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init -backend-config=backend.hcl
-
       - name: Run Terraform Destroy Plan
-        run: terraform plan -destroy -out
+        run: terraform plan -destroy -out=destroy.tfplan
+
+
+      - name: Apply Terraform Destroy
+        run: terraform apply destroy.tfplan
