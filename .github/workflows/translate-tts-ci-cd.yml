@@ -12,7 +12,7 @@
 name: Translate & Text To Speech Solution Deployment
 on:
   pull_request:
-    branches: [main]
+    branches: [production]
   workflow_dispatch: 
     
 env:
@@ -145,7 +145,7 @@ jobs:
     name: Terraform Apply
     needs: plan
     environment: production
-    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main'
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'production'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
