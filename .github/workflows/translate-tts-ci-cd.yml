@@ -13,6 +13,9 @@ name: Translate & Text To Speech Solution Deployment
 on:
   pull_request:
     branches: [production]
+  push: # Trigger when code is pushed/merged to the production branch
+    branches:
+      - production
   workflow_dispatch: 
     
 env:
