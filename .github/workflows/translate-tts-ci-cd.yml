@@ -12,9 +12,9 @@
 name: Translate & Text To Speech Solution Deployment
 on:
   pull_request:
-    branches: [main]
-  workflow_dispatch: 
-    
+    branches: [production]
+  workflow_dispatch:
+
 env:
   FUNCTION_ARCHIVE_PREFIX: cloud_function_source_${{ github.sha}}
 permissions:
