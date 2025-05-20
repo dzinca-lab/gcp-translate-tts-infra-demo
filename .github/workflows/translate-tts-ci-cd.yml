@@ -1,9 +1,20 @@
+## GitHub Actions Workflow for Translate & Text To Speech Solution Deployment
+
+# This workflow automates the continuous integration and deployment (CI/CD) process for a translation and text-to-speech solution on Google Cloud Platform (GCP). It performs the following key actions on pull requests to the main branch:
+
+# 1. Builds and uploads cloud functions for translation and text-to-speech
+# 2. Conducts security scanning using Checkov
+# 3. Runs Terraform plan and apply operations for infrastructure deployment
+
+# The workflow uses GitHub Actions with Google Cloud Platform (GCP) authentication via Workload Identity (a method for securely accessing GCP resources without service account keys). For more details, see the [Workload Identity documentation](https://cloud.google.com/iam/docs/workload-identity-federation). It supports automated infrastructure provisioning and function deployment.
 ---
+
 name: Translate & Text To Speech Solution Deployment
-'on':
-  workflow_dispatch: null
-  push:
+on:
+  pull_request:
     branches: [main]
+  workflow_dispatch: 
+    
 env:
   FUNCTION_ARCHIVE_PREFIX: cloud_function_source_${{ github.sha}}
 permissions:

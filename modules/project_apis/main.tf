@@ -1,5 +1,5 @@
 locals {
-  apis_config = yamldecode(file("./config.yml"))
+  apis_config = yamldecode(file("./config/gcp_apis.yml"))
   api_list    = local.apis_config.apis
 }
 
