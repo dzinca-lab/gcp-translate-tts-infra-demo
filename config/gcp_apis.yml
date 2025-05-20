@@ -1,9 +1,5 @@
-parameters:
-  function_archive_prefix: "cloud_function_source"
-  code_bucket_region: "us-central1"
-  code_bucket_suffix: "ttts-code"
-  python_version: 39
-
+# This file contains a list of Google Cloud APIs that are required for the project.
+# These APIs are used in the CI/CD pipeline and Terraform configurations.
 apis:
   - artifactregistry.googleapis.com
   - cloudbuild.googleapis.com
