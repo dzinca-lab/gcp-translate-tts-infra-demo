@@ -1,0 +1,45 @@
+name: Destroy Translate & TTS Infrastructure
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    name: Terraform Destroy
+    environment: production
+    env:
+      STATE_BUCKET: tf-state-production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}
+          service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
+
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Generate backend config
+        run: |
+          cat > backend.hcl <<EOF
+          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
+          prefix = "terraform/"
+          EOF
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Initialize Terraform
+        run: terraform init -backend-config=backend.hcl
+
+      - name: Run Terraform Destroy Plan
+        run: terraform plan -destroy -out
