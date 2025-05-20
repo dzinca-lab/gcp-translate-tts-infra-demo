@@ -28,22 +28,15 @@ jobs:
       - name: Install gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Generate backend config
-        run: |
-          cat > backend.hcl <<EOF
-          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
-          prefix = "terraform/"
-          EOF
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Initialize Terraform
-        run: terraform init -backend-config=${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET/terraform/default.tfstate
+        run: terraform init -backend-config=gs://${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET/terraform/default.tfstate
 
       - name: Run Terraform Destroy Plan
         run: terraform plan -destroy -out=destroy.tfplan
 
 
-      - name: Apply Terraform Destroy
+      - name: Apply Terraform Destroyx
         run: terraform apply destroy.tfplan
