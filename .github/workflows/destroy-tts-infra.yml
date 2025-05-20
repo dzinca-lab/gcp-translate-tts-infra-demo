@@ -1,0 +1,86 @@
+name: Destroy Translate & TTS Infrastructure
+'on':
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+      confirmation:
+        description: 'Type "destroy" to confirm infrastructure destruction'
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  validate-input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation
+        if: ${{ inputs.confirmation != 'destroy' }}
+        run: |
+          echo "Confirmation text must be 'destroy'. Aborting."
+          exit 1
+
+  destroy:
+    needs: validate-input
+    runs-on: ubuntu-latest
+    name: Terraform Destroy
+    environment: ${{ inputs.environment }}
+    env:
+      STATE_BUCKET: tf-state-${{ inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: projects/${{ secrets.GCP_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{ vars.POOL_ID }}/providers/${{ vars.PROVIDER_ID }}
+          service_account: ${{ vars.SERVICE_ACCOUNT_NAME }}
+          
+      - name: Install gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        
+      - name: Generate backend config
+        run: |
+          cat > backend.hcl <<EOF
+          bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
+          prefix = "terraform/"
+          EOF
+          
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        
+      - name: Initialize Terraform
+        run: terraform init -backend-config=backend.hcl
+        
+      - name: Run Terraform Destroy Plan
+        run: terraform plan -destroy -out=tfdestroyplan
+        env:
+          TF_VAR_project_id: ${{ vars.GCP_PROJECT_ID }}
+          TF_VAR_gcp_region: ${{ vars.GCP_REGION }}
+          TF_VAR_target_language: ${{ vars.TARGET_LANGUAGE }}
+          TF_VAR_python_version: ${{ vars.PYTHON_VERSION }}
+          TF_VAR_code_bucket_suffix: ${{ vars.CODE_BUCKET_SUFFIX }}
+          
+      - name: Apply Terraform Destroy
+        run: terraform apply -auto-approve tfdestroyplan
+        
+      - name: Clean up GCS buckets
+        if: success()
+        run: |
+          echo "Removing function code bucket..."
+          gsutil -m rm -r gs://${{ vars.GCP_PROJECT_ID }}-${{ vars.CODE_BUCKET_SUFFIX }}/ || true
+          gsutil rb gs://${{ vars.GCP_PROJECT_ID }}-${{ vars.CODE_BUCKET_SUFFIX }}/ || true
+          
+          echo "Removing Terraform state bucket..."
+          gsutil -m rm -r gs://${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET/ || true
+          gsutil rb gs://${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET/ || true
