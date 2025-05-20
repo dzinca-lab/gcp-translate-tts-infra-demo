@@ -39,7 +39,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Initialize Terraform
-        run: terraform init -backend-config=default.tfstate
+        run: terraform init -backend-config=backend.hcl
       - name: Run Terraform Destroy Plan
         run: terraform plan -destroy -out=destroy.tfplan
 
