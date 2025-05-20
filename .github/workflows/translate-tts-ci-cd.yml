@@ -20,7 +20,8 @@ env:
 permissions:
   id-token: write
   contents: read
-  actions: read 
+  actions: read
+  security-events: write
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -64,8 +65,6 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
     needs: build
     steps:
       - name: Checkout code
@@ -146,6 +145,7 @@ jobs:
     name: Terraform Apply
     needs: plan
     environment: production
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
