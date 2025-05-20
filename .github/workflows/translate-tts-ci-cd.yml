@@ -20,7 +20,8 @@ on:
       - 'apps/translation/**'
       - 'apps/text-to-speech/**'
       - '*.tf'
-      - 'scripts/**'               # Run when scripts change
+      - 'scripts/**'
+      - '.github/workflows/**'
 
   workflow_dispatch: 
     
