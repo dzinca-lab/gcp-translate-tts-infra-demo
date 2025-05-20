@@ -77,13 +77,13 @@ jobs:
           framework: terraform,github_actions
           quiet: false
           soft_fail: true
-          output_format: sarif
-          output_file: checkov-results.sarif
+          output_format: cli,sarif
+          output_file_path: results.sarif
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         if: success() || failure()
         with:
-          sarif_file: ./checkov-results.sarif
+          sarif_file: ./results.sarif
           category: checkov
   plan:
     runs-on: ubuntu-latest
