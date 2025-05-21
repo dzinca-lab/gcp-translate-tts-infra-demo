@@ -120,16 +120,14 @@ jobs:
 
       - name: Generate backend config
         run: |
-          cat > backend.hcl <<EOF
-            terraform {
-              backend "gcs" {
-                bucket  = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
-                prefix  = "terraform/${{ vars.GCP_PROJECT_ID }}"
-              }
+          cat > backend.tf <<EOF
+          terraform {
+            backend "gcs" {
+              bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
+              prefix = "terraform/${GCP_PROJECT_ID}"
             }
+          }
           EOF
-   
-
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
       - name: Initialize Terraform
