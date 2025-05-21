@@ -37,7 +37,7 @@ jobs:
                 prefix  = "terraform/${{ vars.GCP_PROJECT_ID }}"
               }
             }
-            EOF
+          EOF
    
 
       - name: Set up Terraform
