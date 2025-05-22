@@ -3,6 +3,10 @@ locals {
   speech_function_name= "text-to-speech-function"
 }
 
+output "project_number" {
+  value = data.google_project.project.number
+}
+
 module "enable_apis" {
   source     = "./modules/project_apis"
   project_id = var.project_id

@@ -31,20 +31,15 @@ jobs:
       - name: Generate backend config
         run: |
           cat > backend.hcl <<EOF
-          terraform {
-          backend "gcs" {
           bucket = "${{ vars.GCP_PROJECT_ID }}-$STATE_BUCKET"
           prefix = "terraform/"
-          }
-           }
-           EOF
+          EOF
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Initialize Terraform
         run: terraform init -backend-config=backend.hcl
-
       - name: Run Terraform Destroy Plan
         run: terraform plan -destroy -out=destroy.tfplan
 
